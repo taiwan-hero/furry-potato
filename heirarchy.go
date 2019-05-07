@@ -12,6 +12,7 @@ type user struct {
 	Role int64  `json:"Role"`
 }
 
+//Heirarchy implements exported context for user role heirarchy structure
 type Heirarchy struct {
 	userMap map[int64]user
 	roleMap map[int64][]user
