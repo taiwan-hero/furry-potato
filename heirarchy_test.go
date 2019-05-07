@@ -3,6 +3,7 @@ package heirarchy
 import (
 	"encoding/json"
 	"io/ioutil"
+	"reflect"
 	"testing"
 )
 
@@ -34,12 +35,30 @@ func parseUsers(fileName string) []user {
 	return u.Users
 }
 
-func TestGetSubordinates(t *testing.T) {
-	r := parseRoles("./roles1.json")
-
-	setRoles(r)
-
+func TestGetUserExists(t *testing.T) {
+	h := Heirarchy{}
 	u := parseUsers("./users1.json")
+	h.setUsers(u)
+	u1, exists := h.getUserByID(5)
+	if !exists {
+		t.Errorf("u1: %s \n", u1.Name)
+	}
+	expected := user{5, "Steve Trainer", 5}
+	if !reflect.DeepEqual(u1, expected) {
+		t.Errorf("got %v ; expected %v", u1, expected)
+	}
+}
+func TestGetSubordinates(t *testing.T) {
+	h := Heirarchy{}
+	r := parseRoles("./roles1.json")
+	h.setRoles(r)
+	u := parseUsers("./users1.json")
+	h.setUsers(u)
 
-	setUsers(u)
+	actual := h.getSubordinates(0)
+	expected := u
+
+	if !reflect.DeepEqual(actual, expected) {
+		t.Errorf("got %v ; expected %v", actual, expected)
+	}
 }

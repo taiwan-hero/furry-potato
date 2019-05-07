@@ -1,7 +1,5 @@
 package heirarchy
 
-import "fmt"
-
 type role struct {
 	ID     int64  `json:"Id"`
 	Name   string `json:"Name"`
@@ -15,20 +13,33 @@ type user struct {
 }
 
 type Heirarchy struct {
+	roles   []role
+	users   []user
+	userMap map[int64]user
+	roleMap map[int64]role
 }
 
-func setRoles(r []role) {
+func (h *Heirarchy) setRoles(r []role) {
+	h.roles = r
+	h.roleMap = make(map[int64]role)
 	for i := 0; i < len(r); i++ {
-		fmt.Printf("%d: %s %d\n", r[i].ID, r[i].Name, r[i].Parent)
+		h.roleMap[r[i].ID] = r[i]
 	}
 }
 
-func setUsers(u []user) {
+func (h *Heirarchy) setUsers(u []user) {
+	h.users = u
+	h.userMap = make(map[int64]user)
 	for i := 0; i < len(u); i++ {
-		fmt.Printf("%d: %s %d\n", u[i].ID, u[i].Name, u[i].Role)
+		h.userMap[u[i].ID] = u[i]
 	}
 }
 
-func getSubordinates(u int64) []user {
+func (h *Heirarchy) getUserByID(userID int64) (user, bool) {
+	u, ok := h.userMap[userID]
+	return u, ok
+}
 
+func (h *Heirarchy) getSubordinates(u int64) []user {
+	return h.users
 }
